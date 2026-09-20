@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.vscode/
+.idea/
+
+# Generated Kubernetes / Helm output
+prometheus-rendered.yaml
+
+# OS files
+.DS_Store
+Thumbs.db
