@@ -13,11 +13,36 @@ pipeline {
             steps {
                 sh '''
                     echo "Checking project files..."
+
                     test -f app.py
                     test -f requirements.txt
                     test -f Dockerfile
                     test -f helm/devops-portfolio-app/Chart.yaml
+
                     echo "Project structure validation successful"
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    echo "Installing Python dependencies..."
+
+                    python3 --version
+                    pip3 --version
+
+                    pip3 install --no-cache-dir -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    echo "Running automated tests..."
+
+                    pytest -v
                 '''
             }
         }
