@@ -27,12 +27,16 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
+                    echo "Creating Python virtual environment..."
+
+                    python3 -m venv .venv
+
                     echo "Installing Python dependencies..."
 
-                    python3 --version
-                    pip3 --version
+                    .venv/bin/python --version
+                    .venv/bin/pip --version
 
-                    pip3 install --no-cache-dir -r requirements.txt
+                    .venv/bin/pip install --no-cache-dir -r requirements.txt
                 '''
             }
         }
@@ -42,7 +46,7 @@ pipeline {
                 sh '''
                     echo "Running automated tests..."
 
-                    pytest -v
+                    .venv/bin/pytest -v
                 '''
             }
         }
