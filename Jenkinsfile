@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -13,12 +12,10 @@ pipeline {
             steps {
                 sh '''
                     echo "Checking project files..."
-
                     test -f app.py
                     test -f requirements.txt
                     test -f Dockerfile
                     test -f helm/devops-portfolio-app/Chart.yaml
-
                     echo "Project structure validation successful"
                 '''
             }
@@ -28,14 +25,9 @@ pipeline {
             steps {
                 sh '''
                     echo "Creating Python virtual environment..."
-
                     python3 -m venv .venv
-
-                    echo "Installing Python dependencies..."
-
                     .venv/bin/python --version
                     .venv/bin/pip --version
-
                     .venv/bin/pip install --no-cache-dir -r requirements.txt
                 '''
             }
@@ -45,8 +37,18 @@ pipeline {
             steps {
                 sh '''
                     echo "Running automated tests..."
-
                     .venv/bin/pytest -v
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    echo "Building application Docker image..."
+                    docker build --pull=false -t devops-portfolio-app:1.0 .
+                    echo "Verifying built image..."
+                    docker image inspect devops-portfolio-app:1.0
                 '''
             }
         }
